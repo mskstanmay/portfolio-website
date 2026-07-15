@@ -52,7 +52,12 @@ export default function Hero() {
           >
             View Projects
           </a>
-          <a href={PERSONAL_INFO.resumeUrl} download className="btn-secondary">
+          <a
+            href={PERSONAL_INFO.resumeUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="btn-secondary"
+          >
             Download Resume
           </a>
         </motion.div>

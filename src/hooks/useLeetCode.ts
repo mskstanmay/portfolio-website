@@ -17,7 +17,7 @@ export interface LeetCodeStatsData {
 }
 
 interface UseLeetCodeResult {
-  data: LeetCodeStatsData | null;
+  stats: LeetCodeStatsData | null;
   loading: boolean;
   error: string | null;
 }
@@ -40,7 +40,7 @@ interface LeetCodeStatsApiResponse {
 }
 
 export function useLeetCode(username: string = LEETCODE_USERNAME): UseLeetCodeResult {
-  const [data, setData] = useState<LeetCodeStatsData | null>(null);
+  const [stats, setStats] = useState<LeetCodeStatsData | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -60,7 +60,7 @@ export function useLeetCode(username: string = LEETCODE_USERNAME): UseLeetCodeRe
         }
 
         if (!cancelled) {
-          setData({
+          setStats({
             totalSolved: response.data.totalSolved,
             easySolved: response.data.easySolved,
             mediumSolved: response.data.mediumSolved,
@@ -94,5 +94,5 @@ export function useLeetCode(username: string = LEETCODE_USERNAME): UseLeetCodeRe
     };
   }, [username]);
 
-  return { data, loading, error };
+  return { stats, loading, error };
 }

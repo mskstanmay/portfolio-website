@@ -1,12 +1,63 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { GITHUB_API_BASE, GITHUB_USERNAME } from '@/utils/constants';
+import { GITHUB_USERNAME } from '@/utils/constants';
 import type { GitHubRepo } from '@/types';
+
+const GITHUB_GRAPHQL_ENDPOINT = 'https://api.github.com/graphql';
+
+// Not declared in ImportMetaEnv to avoid touching vite-env.d.ts per task scope.
+const GITHUB_TOKEN: string = (import.meta.env as Record<string, string | undefined>)
+  .VITE_GITHUB_TOKEN ?? '';
 
 interface UseGitHubResult {
   repos: GitHubRepo[];
   loading: boolean;
   error: string | null;
+}
+
+const PINNED_REPOS_QUERY = `
+  query pinnedRepos($username: String!) {
+    user(login: $username) {
+      pinnedItems(first: 6, types: [REPOSITORY]) {
+        nodes {
+          ... on Repository {
+            name
+            description
+            url
+            stargazerCount
+            forkCount
+            primaryLanguage {
+              name
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+interface GraphQLError {
+  message: string;
+}
+
+interface PinnedRepoNode {
+  name: string;
+  description: string | null;
+  url: string;
+  stargazerCount: number;
+  forkCount: number;
+  primaryLanguage: { name: string } | null;
+}
+
+interface PinnedReposResponse {
+  data?: {
+    user: {
+      pinnedItems: {
+        nodes: PinnedRepoNode[];
+      };
+    } | null;
+  };
+  errors?: GraphQLError[];
 }
 
 export function useGitHub(username: string = GITHUB_USERNAME): UseGitHubResult {
@@ -17,27 +68,56 @@ export function useGitHub(username: string = GITHUB_USERNAME): UseGitHubResult {
   useEffect(() => {
     let cancelled = false;
 
-    async function fetchRepos() {
+    async function fetchPinnedRepos() {
       setLoading(true);
       setError(null);
       try {
-        const { data } = await axios.get<GitHubRepo[]>(
-          `${GITHUB_API_BASE}/users/${username}/repos`,
-          { params: { per_page: 100, sort: 'updated' } }
+        const { data: responseData } = await axios.post<PinnedReposResponse>(
+          GITHUB_GRAPHQL_ENDPOINT,
+          {
+            query: PINNED_REPOS_QUERY,
+            variables: { username },
+          },
+          {
+            headers: {
+              Authorization: `bearer ${GITHUB_TOKEN}`,
+              'Content-Type': 'application/json',
+            },
+          }
         );
 
-        const topRepos = [...data]
-          .sort((a, b) => b.stargazers_count - a.stargazers_count)
-          .slice(0, 6);
+        if (responseData.errors && responseData.errors.length > 0) {
+          throw new Error(responseData.errors.map((e) => e.message).join(', '));
+        }
+
+        const nodes = responseData.data?.user?.pinnedItems.nodes ?? [];
+
+        if (nodes.length === 0) {
+          throw new Error('No pinned repositories found');
+        }
+
+        const pinnedRepos: GitHubRepo[] = nodes.map((node, index) => ({
+          id: index,
+          name: node.name,
+          description: node.description,
+          html_url: node.url,
+          stargazers_count: node.stargazerCount,
+          forks_count: node.forkCount,
+          language: node.primaryLanguage?.name ?? null,
+        }));
 
         if (!cancelled) {
-          setRepos(topRepos);
+          setRepos(pinnedRepos);
         }
       } catch (err) {
         if (!cancelled) {
-          setError(
-            err instanceof Error ? err.message : 'Failed to fetch GitHub repositories.'
-          );
+          if (axios.isAxiosError(err)) {
+            setError(err.message || 'Failed to fetch GitHub repositories.');
+          } else {
+            setError(
+              err instanceof Error ? err.message : 'Failed to fetch GitHub repositories.'
+            );
+          }
         }
       } finally {
         if (!cancelled) {
@@ -46,7 +126,7 @@ export function useGitHub(username: string = GITHUB_USERNAME): UseGitHubResult {
       }
     }
 
-    fetchRepos();
+    fetchPinnedRepos();
 
     return () => {
       cancelled = true;

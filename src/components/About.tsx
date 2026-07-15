@@ -19,9 +19,11 @@ export default function About() {
           transition={{ duration: 0.5 }}
           className="mx-auto h-56 w-56 shrink-0 overflow-hidden rounded-2xl border border-dark-500 bg-dark-800 md:mx-0"
         >
-          <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-primary-600/30 to-accent-500/20 text-6xl font-bold text-primary-300">
-            {PERSONAL_INFO.name.charAt(0)}
-          </div>
+          <img
+            src={PERSONAL_INFO.profileImage}
+            alt={PERSONAL_INFO.fullName}
+            className="h-full w-full object-cover"
+          />
         </motion.div>
 
         <div>

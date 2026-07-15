@@ -33,7 +33,7 @@ export const PERSONAL_INFO = {
   domain: 'mskstanmay.co.in',
   email: 'mskstanmaywork@gmail.com',
   resumeUrl: 'https://drive.google.com/uc?export=download&id=1xN5givsjg4nglxmrMUJtnYgkWyeZyQcg',
-  profileImage: '/profile-placeholder.svg',
+  profileImage: '/linkedinpfp.png',
 };
 
 export const NAV_LINKS: NavLink[] = [

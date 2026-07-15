@@ -36,6 +36,11 @@ export interface LeetCodeDifficultyStat {
   count: number;
 }
 
+export interface LeetCodeTopic {
+  topic: string;
+  count: number;
+}
+
 export interface LeetCodeStats {
   totalSolved: number;
   easySolved: number;
@@ -47,6 +52,7 @@ export interface LeetCodeStats {
   ranking: number;
   acceptanceRate: number;
   isStatic: boolean;
+  topics: LeetCodeTopic[];
 }
 
 export interface GitHubRepo {

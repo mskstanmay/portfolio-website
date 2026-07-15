@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { LEETCODE_USERNAME } from '@/utils/constants';
-import type { LeetCodeStats } from '@/types';
+import type { LeetCodeStats, LeetCodeTopic } from '@/types';
 
-const PRIMARY_API = 'https://leetcode-stats-api.herokuapp.com';
+const PRIMARY_API = 'https://leetcode-stats.tashif.codes';
 const FALLBACK_API = 'https://alfa-leetcode-api.onrender.com';
 const REQUEST_TIMEOUT_MS = 8000;
 
@@ -17,6 +17,7 @@ const STATIC_FALLBACK: Omit<LeetCodeStats, 'isStatic'> = {
   totalHard: 740,
   ranking: 238492,
   acceptanceRate: 54.2,
+  topics: [],
 };
 
 interface UseLeetCodeResult {
@@ -27,15 +28,18 @@ interface UseLeetCodeResult {
 
 interface PrimaryApiResponse {
   status: string;
-  totalSolved: number;
-  easySolved: number;
-  mediumSolved: number;
-  hardSolved: number;
-  totalEasy: number;
-  totalMedium: number;
-  totalHard: number;
-  ranking: number;
-  acceptanceRate: number;
+  profile: {
+    ranking: number;
+  };
+  submitStats: {
+    acSubmissionNum: { difficulty: string; count: number; submissions: number }[];
+    totalSubmissionNum: { difficulty: string; count: number; submissions: number }[];
+  };
+}
+
+interface TopicsApiResponse {
+  status: string;
+  data: LeetCodeTopic[];
 }
 
 interface FallbackApiResponse {
@@ -48,9 +52,16 @@ interface FallbackApiResponse {
   acceptanceRate: number;
 }
 
+function findByDifficulty(
+  entries: { difficulty: string; count: number; submissions: number }[],
+  difficulty: string,
+) {
+  return entries.find((entry) => entry.difficulty === difficulty);
+}
+
 async function fetchFromPrimary(username: string): Promise<LeetCodeStats | null> {
   try {
-    const response = await axios.get<PrimaryApiResponse>(`${PRIMARY_API}/${username}`, {
+    const response = await axios.get<PrimaryApiResponse>(`${PRIMARY_API}/${username}/profile`, {
       timeout: REQUEST_TIMEOUT_MS,
     });
 
@@ -60,20 +71,55 @@ async function fetchFromPrimary(username: string): Promise<LeetCodeStats | null>
       return null;
     }
 
+    const { acSubmissionNum, totalSubmissionNum } = response.data.submitStats;
+    const all = findByDifficulty(acSubmissionNum, 'All');
+    const easy = findByDifficulty(acSubmissionNum, 'Easy');
+    const medium = findByDifficulty(acSubmissionNum, 'Medium');
+    const hard = findByDifficulty(acSubmissionNum, 'Hard');
+    const allSubmissions = findByDifficulty(totalSubmissionNum, 'All');
+
+    if (!all || !easy || !medium || !hard || !allSubmissions) {
+      return null;
+    }
+
+    const acceptanceRate =
+      allSubmissions.submissions > 0
+        ? (all.submissions / allSubmissions.submissions) * 100
+        : 0;
+
     return {
-      totalSolved: response.data.totalSolved,
-      easySolved: response.data.easySolved,
-      mediumSolved: response.data.mediumSolved,
-      hardSolved: response.data.hardSolved,
-      totalEasy: response.data.totalEasy,
-      totalMedium: response.data.totalMedium,
-      totalHard: response.data.totalHard,
-      ranking: response.data.ranking,
-      acceptanceRate: response.data.acceptanceRate,
+      totalSolved: all.count,
+      easySolved: easy.count,
+      mediumSolved: medium.count,
+      hardSolved: hard.count,
+      totalEasy: STATIC_FALLBACK.totalEasy,
+      totalMedium: STATIC_FALLBACK.totalMedium,
+      totalHard: STATIC_FALLBACK.totalHard,
+      ranking: response.data.profile.ranking,
+      acceptanceRate,
       isStatic: false,
+      topics: await fetchTopics(username),
     };
   } catch {
     return null;
+  }
+}
+
+async function fetchTopics(username: string): Promise<LeetCodeTopic[]> {
+  try {
+    const response = await axios.get<TopicsApiResponse>(`${PRIMARY_API}/${username}/topics`, {
+      timeout: REQUEST_TIMEOUT_MS,
+    });
+
+    console.log('[LeetCode] topics response:', response.data);
+
+    if (response.status !== 200 || response.data.status !== 'success') {
+      return [];
+    }
+
+    return response.data.data;
+  } catch {
+    return [];
   }
 }
 
@@ -100,6 +146,7 @@ async function fetchFromFallback(username: string): Promise<LeetCodeStats | null
       ranking: response.data.ranking,
       acceptanceRate: response.data.acceptanceRate,
       isStatic: false,
+      topics: [],
     };
   } catch {
     return null;

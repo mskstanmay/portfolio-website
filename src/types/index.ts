@@ -41,6 +41,12 @@ export interface LeetCodeStats {
   easySolved: number;
   mediumSolved: number;
   hardSolved: number;
+  totalEasy: number;
+  totalMedium: number;
+  totalHard: number;
+  ranking: number;
+  acceptanceRate: number;
+  isStatic: boolean;
 }
 
 export interface GitHubRepo {

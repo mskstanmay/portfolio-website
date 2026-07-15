@@ -33,6 +33,8 @@ function SkeletonCard() {
 function LeetCodeContent() {
   const { stats, loading, error } = useLeetCode();
 
+  console.log('[LeetCode] stats received by component:', stats);
+
   if (error) {
     return (
       <div className="card p-6 text-center text-slate-400">
@@ -61,18 +63,23 @@ function LeetCodeContent() {
   }
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.3 }}
-      transition={{ duration: 0.5 }}
-      className="grid gap-4 sm:grid-cols-4"
-    >
-      <StatCard label="Total Solved" value={stats.totalSolved} colorClass="text-primary-400" />
-      <StatCard label="Easy" value={stats.easySolved} colorClass="text-emerald-400" />
-      <StatCard label="Medium" value={stats.mediumSolved} colorClass="text-amber-400" />
-      <StatCard label="Hard" value={stats.hardSolved} colorClass="text-rose-400" />
-    </motion.div>
+    <div>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.3 }}
+        transition={{ duration: 0.5 }}
+        className="grid gap-4 sm:grid-cols-4"
+      >
+        <StatCard label="Total Solved" value={stats.totalSolved} colorClass="text-primary-400" />
+        <StatCard label="Easy" value={stats.easySolved} colorClass="text-emerald-400" />
+        <StatCard label="Medium" value={stats.mediumSolved} colorClass="text-amber-400" />
+        <StatCard label="Hard" value={stats.hardSolved} colorClass="text-rose-400" />
+      </motion.div>
+      {stats.isStatic && (
+        <p className="mt-4 text-center text-xs text-slate-500">Last synced manually</p>
+      )}
+    </div>
   );
 }
 

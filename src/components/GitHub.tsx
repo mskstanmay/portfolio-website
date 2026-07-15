@@ -96,17 +96,28 @@ export default function GitHub() {
         <GitHubContent />
       </ErrorBoundary>
 
-      <div className="card mt-8 flex flex-col items-center justify-center gap-2 p-8 text-center">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.3 }}
+        transition={{ duration: 0.5 }}
+        className="card relative mt-8 flex flex-col items-center justify-center gap-2 overflow-hidden p-8 text-center"
+      >
         <p className="text-sm font-semibold uppercase tracking-widest text-primary-400">
-          Contribution Graph
+          Contribution Skyline
         </p>
-        <img
-          src={`https://ghchart.rshah.org/3b6cf6/${GITHUB_USERNAME}`}
-          alt={`${GITHUB_USERNAME}'s GitHub contribution graph`}
-          className="mt-2 w-full max-w-3xl"
-          loading="lazy"
-        />
-      </div>
+        <p className="text-xs text-slate-500">
+          Every commit, PR, and issue rendered as a 3D isometric city
+        </p>
+        <div className="mt-4 w-full max-w-3xl overflow-hidden rounded-xl border border-white/5 bg-[#060d06] shadow-[0_0_40px_-12px_rgba(0,255,65,0.35)] transition-transform duration-500 hover:scale-[1.02]">
+          <img
+            src={`https://gitcity.natrajx.in/api/svg?username=${GITHUB_USERNAME}`}
+            alt={`${GITHUB_USERNAME}'s GitHub contributions rendered as an isometric city skyline`}
+            className="w-full"
+            loading="lazy"
+          />
+        </div>
+      </motion.div>
     </section>
   );
 }

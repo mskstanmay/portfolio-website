@@ -75,7 +75,7 @@ export const SOCIAL_LINKS: SocialLink[] = [
 ];
 export const EDUCATION: EducationEntry[] = [
   {
-    institution: 'Vellore Institute of Technology (VIT), Amaravati, AP, India',
+    institution: 'Vellore Institute of Technology (VIT), Amaravati, Andhra Pradesh, India',
     degree: 'B.Tech in Computer Science & Engineering',
     duration: 'September 2023 – Present',
     score: 'GPA: 8.93 / 10.0',

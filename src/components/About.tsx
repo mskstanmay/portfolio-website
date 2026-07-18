@@ -51,7 +51,7 @@ export default function About() {
                 <p className="text-sm font-semibold text-primary-400">{entry.duration}</p>
                 <h3 className="text-lg font-bold text-white">{entry.degree}</h3>
                 <p className="text-sm text-slate-400">{entry.institution}</p>
-                {entry.score && <p className="text-sm text-slate-500">{entry.score}</p>}
+                {entry.score && <p className="text-sm text-slate-500"><b>{entry.score}</b></p>}
                 {entry.description && (
                   <p className="mt-1 text-sm text-slate-400">{entry.description}</p>
                 )}

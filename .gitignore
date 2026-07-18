@@ -1,6 +1,10 @@
 # Dependencies
 node_modules/
 
+# AI DEV
+.claude
+.mcp.json
+
 # Build output
 dist/
 dist-ssr/

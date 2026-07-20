@@ -23,7 +23,7 @@ export default class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBo
   render() {
     if (this.state.hasError) {
       return (
-        <div className="card flex flex-col items-center justify-center gap-2 p-8 text-center">
+        <div className="panel flex flex-col items-center justify-center gap-2 p-8 text-center">
           <p className="text-slate-300">
             {this.props.fallbackMessage ?? 'Something went wrong loading this section.'}
           </p>

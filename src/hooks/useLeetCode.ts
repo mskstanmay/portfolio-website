@@ -65,8 +65,6 @@ async function fetchFromPrimary(username: string): Promise<LeetCodeStats | null>
       timeout: REQUEST_TIMEOUT_MS,
     });
 
-    console.log('[LeetCode] primary response:', response.data);
-
     if (response.status !== 200 || response.data.status !== 'success') {
       return null;
     }
@@ -111,8 +109,6 @@ async function fetchTopics(username: string): Promise<LeetCodeTopic[]> {
       timeout: REQUEST_TIMEOUT_MS,
     });
 
-    console.log('[LeetCode] topics response:', response.data);
-
     if (response.status !== 200 || response.data.status !== 'success') {
       return [];
     }
@@ -128,8 +124,6 @@ async function fetchFromFallback(username: string): Promise<LeetCodeStats | null
     const response = await axios.get<FallbackApiResponse>(`${FALLBACK_API}/${username}`, {
       timeout: REQUEST_TIMEOUT_MS,
     });
-
-    console.log('[LeetCode] fallback response:', response.data);
 
     if (response.status !== 200) {
       return null;
@@ -166,13 +160,8 @@ export function useLeetCode(username: string = LEETCODE_USERNAME): UseLeetCodeRe
 
       const primaryResult = await fetchFromPrimary(username);
       const fallbackResult = primaryResult ?? (await fetchFromFallback(username));
-      if (!primaryResult && !fallbackResult) {
-        console.log('[LeetCode] falling back to static');
-      }
       const finalResult: LeetCodeStats =
         fallbackResult ?? { ...STATIC_FALLBACK, isStatic: true };
-
-      console.log('[LeetCode] final stats object:', finalResult);
 
       if (!cancelled) {
         setStats(finalResult);

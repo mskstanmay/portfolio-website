@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import SectionHeading from './SectionHeading';
 import ErrorBoundary from './ErrorBoundary';
 import { useLeetCode } from '@/hooks/useLeetCode';
@@ -15,8 +15,8 @@ function StatCard({
   colorClass: string;
 }) {
   return (
-    <div className="card p-6 text-center">
-      <p className={`text-3xl font-extrabold ${colorClass}`}>{value}</p>
+    <div className="panel p-6 text-center">
+      <p className={`stat-number text-3xl font-extrabold ${colorClass}`}>{value}</p>
       <p className="mt-2 text-sm font-medium text-slate-400">{label}</p>
     </div>
   );
@@ -62,7 +62,7 @@ function buildProficiencyTiers(topics: LeetCodeTopic[]): ProficiencyTier[] {
   ].filter((tier) => tier.topics.length > 0);
 }
 
-function TopicProficiency({ topics }: { topics: LeetCodeTopic[] }) {
+function TopicProficiency({ topics, reveal }: { topics: LeetCodeTopic[]; reveal: object }) {
   if (topics.length === 0) {
     return null;
   }
@@ -71,25 +71,19 @@ function TopicProficiency({ topics }: { topics: LeetCodeTopic[] }) {
   const tiers = buildProficiencyTiers(topics);
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.3 }}
-      transition={{ duration: 0.5, delay: 0.1 }}
-      className="card mt-6 p-6"
-    >
+    <motion.div {...reveal} className="panel mt-6 p-6">
       <h3 className="mb-4 text-lg font-semibold text-slate-200">Topic Proficiency</h3>
       <div className="grid gap-6 md:grid-cols-3">
         {tiers.map((tier) => (
           <div key={tier.label}>
             <p className={`text-sm font-semibold ${tier.colorClass}`}>{tier.label}</p>
-            <p className="mb-3 text-xs text-slate-500">{tier.description}</p>
+            <p className="mb-3 text-xs text-slate-400">{tier.description}</p>
             <ul className="space-y-2">
               {tier.topics.slice(0, 6).map((topic) => (
                 <li key={topic.topic}>
                   <div className="mb-1 flex items-center justify-between text-xs text-slate-400">
                     <span>{topic.topic}</span>
-                    <span>{topic.count}</span>
+                    <span className="stat-number">{topic.count}</span>
                   </div>
                   <div className="h-1.5 w-full overflow-hidden rounded-full bg-dark-600">
                     <div
@@ -109,21 +103,36 @@ function TopicProficiency({ topics }: { topics: LeetCodeTopic[] }) {
 
 function SkeletonCard() {
   return (
-    <div className="card animate-pulse p-6 text-center">
+    <div className="panel animate-pulse p-6 text-center">
       <div className="mx-auto h-8 w-16 rounded bg-dark-600" />
       <div className="mx-auto mt-3 h-4 w-20 rounded bg-dark-600" />
     </div>
   );
 }
 
-function LeetCodeContent() {
+function LeetCodeContent({ reduceMotion }: { reduceMotion: boolean }) {
   const { stats, loading, error } = useLeetCode();
 
-  console.log('[LeetCode] stats received by component:', stats);
+  const statsReveal = reduceMotion
+    ? {}
+    : {
+        initial: { opacity: 0, y: 20 },
+        whileInView: { opacity: 1, y: 0 },
+        viewport: { once: true, amount: 0.1 as const },
+        transition: { duration: 0.35, ease: 'easeOut' as const },
+      };
+  const topicReveal = reduceMotion
+    ? {}
+    : {
+        initial: { opacity: 0, y: 20 },
+        whileInView: { opacity: 1, y: 0 },
+        viewport: { once: true, amount: 0.1 as const },
+        transition: { duration: 0.35, delay: 0.08, ease: 'easeOut' as const },
+      };
 
   if (error) {
     return (
-      <div className="card p-6 text-center text-slate-400">
+      <div className="panel p-6 text-center text-slate-400">
         Couldn&apos;t load LeetCode stats right now.{' '}
         <a
           href={`https://leetcode.com/${LEETCODE_USERNAME}`}
@@ -150,27 +159,23 @@ function LeetCodeContent() {
 
   return (
     <div>
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.3 }}
-        transition={{ duration: 0.5 }}
-        className="grid gap-4 sm:grid-cols-4"
-      >
+      <motion.div {...statsReveal} className="grid gap-4 sm:grid-cols-4">
         <StatCard label="Total Solved" value={stats.totalSolved} colorClass="text-primary-400" />
         <StatCard label="Easy" value={stats.easySolved} colorClass="text-emerald-400" />
         <StatCard label="Medium" value={stats.mediumSolved} colorClass="text-amber-400" />
         <StatCard label="Hard" value={stats.hardSolved} colorClass="text-rose-400" />
       </motion.div>
       {stats.isStatic && (
-        <p className="mt-4 text-center text-xs text-slate-500">Last synced manually</p>
+        <p className="mt-4 text-center text-xs text-slate-400">Last synced manually</p>
       )}
-      <TopicProficiency topics={stats.topics} />
+      <TopicProficiency topics={stats.topics} reveal={topicReveal} />
     </div>
   );
 }
 
 export default function LeetCode() {
+  const reduceMotion = Boolean(useReducedMotion());
+
   return (
     <section id="leetcode" className="section-container">
       <SectionHeading
@@ -179,7 +184,7 @@ export default function LeetCode() {
         description={`Live stats pulled from my LeetCode profile (@${LEETCODE_USERNAME}).`}
       />
       <ErrorBoundary fallbackMessage="Couldn't load LeetCode stats right now.">
-        <LeetCodeContent />
+        <LeetCodeContent reduceMotion={reduceMotion} />
       </ErrorBoundary>
     </section>
   );

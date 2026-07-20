@@ -1,8 +1,20 @@
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import SectionHeading from './SectionHeading';
 import { SKILLS } from '@/utils/constants';
 
 export default function Skills() {
+  const reduceMotion = useReducedMotion();
+
+  const cardReveal = (idx: number) =>
+    reduceMotion
+      ? {}
+      : {
+          initial: { opacity: 0, y: 24 },
+          whileInView: { opacity: 1, y: 0 },
+          viewport: { once: true, amount: 0.1 as const },
+          transition: { duration: 0.35, delay: idx * 0.06, ease: 'easeOut' as const },
+        };
+
   return (
     <section id="skills" className="section-container">
       <SectionHeading
@@ -13,14 +25,7 @@ export default function Skills() {
 
       <div className="grid gap-6 sm:grid-cols-2">
         {SKILLS.map((category, idx) => (
-          <motion.div
-            key={category.category}
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.5, delay: idx * 0.08 }}
-            className="card p-6"
-          >
+          <motion.div key={category.category} {...cardReveal(idx)} className="panel p-6">
             <h3 className="mb-4 text-sm font-semibold uppercase tracking-widest text-primary-400">
               {category.category}
             </h3>

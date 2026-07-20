@@ -1,12 +1,14 @@
 import { useState, type FormEvent } from 'react';
 import emailjs from '@emailjs/browser';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import SectionHeading from './SectionHeading';
+import { GitHubIcon, LinkedInIcon, LeetCodeIcon, EmailIcon } from './icons';
 import {
   EMAILJS_PUBLIC_KEY,
   EMAILJS_SERVICE_ID,
   EMAILJS_TEMPLATE_ID,
   PERSONAL_INFO,
+  SOCIAL_LINKS,
 } from '@/utils/constants';
 import type { ContactFormData } from '@/types';
 
@@ -14,9 +16,26 @@ type SubmitStatus = 'idle' | 'sending' | 'success' | 'error';
 
 const INITIAL_FORM: ContactFormData = { name: '', email: '', message: '' };
 
+const CONTACT_TILE_ICONS = {
+  github: GitHubIcon,
+  linkedin: LinkedInIcon,
+  leetcode: LeetCodeIcon,
+  email: EmailIcon,
+};
+
 export default function Contact() {
   const [form, setForm] = useState<ContactFormData>(INITIAL_FORM);
   const [status, setStatus] = useState<SubmitStatus>('idle');
+  const reduceMotion = useReducedMotion();
+
+  const formReveal = reduceMotion
+    ? {}
+    : {
+        initial: { opacity: 0, y: 20 },
+        whileInView: { opacity: 1, y: 0 },
+        viewport: { once: true, amount: 0.1 as const },
+        transition: { duration: 0.35, ease: 'easeOut' as const },
+      };
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -57,18 +76,47 @@ export default function Contact() {
     <section id="contact" className="section-container">
       <SectionHeading
         eyebrow="Contact"
-        title="Let's work together"
-        description={`Have a project in mind or just want to say hi? Reach out at ${PERSONAL_INFO.email}.`}
+        title="Get in touch"
+        description={
+          <>
+            Open to full-time roles and internships. The fastest way to reach me is directly at{' '}
+            <a
+              href={`mailto:${PERSONAL_INFO.email}`}
+              className="text-primary-400 hover:underline"
+            >
+              {PERSONAL_INFO.email}
+            </a>
+            .
+          </>
+        }
+        className="max-w-none"
       />
 
-      <motion.form
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.3 }}
-        transition={{ duration: 0.5 }}
-        onSubmit={handleSubmit}
-        className="card mx-auto max-w-2xl space-y-4 p-6 sm:p-8"
-      >
+      <div className="grid gap-12 lg:grid-cols-2 lg:items-start">
+        <div className="order-2 grid grid-cols-2 gap-4 lg:order-1">
+          {SOCIAL_LINKS.map((link) => {
+            const Icon = CONTACT_TILE_ICONS[link.icon];
+            return (
+              <a
+                key={link.name}
+                href={link.url}
+                target={link.icon === 'email' ? undefined : '_blank'}
+                rel="noreferrer"
+                aria-label={link.name}
+                className="panel group flex aspect-square flex-col items-center justify-center gap-3 p-6 transition-all hover:-translate-y-0.5 hover:border-primary-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 focus-visible:ring-offset-dark-900"
+              >
+                <Icon className="h-8 w-8 text-slate-300 transition-colors group-hover:text-primary-400" />
+                <span className="text-sm font-medium text-slate-300">{link.name}</span>
+              </a>
+            );
+          })}
+        </div>
+
+        <motion.form
+          {...formReveal}
+          onSubmit={handleSubmit}
+          className="panel order-1 space-y-4 p-6 sm:p-8 lg:order-2"
+        >
         <div>
           <label htmlFor="name" className="mb-1.5 block text-sm font-medium text-slate-300">
             Name
@@ -80,7 +128,7 @@ export default function Contact() {
             required
             value={form.name}
             onChange={handleChange}
-            className="w-full rounded-lg border border-dark-500 bg-dark-700 px-4 py-2.5 text-sm text-slate-100 outline-none transition-colors focus:border-primary-500"
+            className="w-full rounded-lg border border-dark-500 bg-dark-700 px-4 py-2.5 text-sm text-slate-100 outline-none transition-colors focus:border-primary-500 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 focus-visible:ring-offset-dark-900"
             placeholder="Your name"
           />
         </div>
@@ -96,7 +144,7 @@ export default function Contact() {
             required
             value={form.email}
             onChange={handleChange}
-            className="w-full rounded-lg border border-dark-500 bg-dark-700 px-4 py-2.5 text-sm text-slate-100 outline-none transition-colors focus:border-primary-500"
+            className="w-full rounded-lg border border-dark-500 bg-dark-700 px-4 py-2.5 text-sm text-slate-100 outline-none transition-colors focus:border-primary-500 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 focus-visible:ring-offset-dark-900"
             placeholder="you@example.com"
           />
         </div>
@@ -112,7 +160,7 @@ export default function Contact() {
             rows={5}
             value={form.message}
             onChange={handleChange}
-            className="w-full resize-none rounded-lg border border-dark-500 bg-dark-700 px-4 py-2.5 text-sm text-slate-100 outline-none transition-colors focus:border-primary-500"
+            className="w-full resize-none rounded-lg border border-dark-500 bg-dark-700 px-4 py-2.5 text-sm text-slate-100 outline-none transition-colors focus:border-primary-500 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 focus-visible:ring-offset-dark-900"
             placeholder="Tell me about your project..."
           />
         </div>
@@ -131,6 +179,7 @@ export default function Contact() {
           </p>
         )}
       </motion.form>
+      </div>
     </section>
   );
 }

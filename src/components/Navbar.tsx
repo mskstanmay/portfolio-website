@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useId, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { NAV_LINKS, PERSONAL_INFO } from '@/utils/constants';
 import { MenuIcon, CloseIcon } from './icons';
@@ -6,6 +6,7 @@ import { MenuIcon, CloseIcon } from './icons';
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const menuId = useId();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -40,7 +41,7 @@ export default function Navbar() {
           <span className="text-primary-500">.</span>
         </a>
 
-        <ul className="hidden items-center gap-8 md:flex">
+        <ul className="hidden items-center gap-6 lg:flex">
           {NAV_LINKS.map((link) => (
             <li key={link.href}>
               <a
@@ -59,8 +60,10 @@ export default function Navbar() {
 
         <button
           type="button"
-          className="text-slate-200 md:hidden"
+          className="text-slate-200 lg:hidden"
           aria-label="Toggle navigation menu"
+          aria-expanded={isOpen}
+          aria-controls={menuId}
           onClick={() => setIsOpen((prev) => !prev)}
         >
           {isOpen ? <CloseIcon className="h-6 w-6" /> : <MenuIcon className="h-6 w-6" />}
@@ -70,11 +73,12 @@ export default function Navbar() {
       <AnimatePresence>
         {isOpen && (
           <motion.ul
+            id={menuId}
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.25 }}
-            className="flex flex-col gap-1 overflow-hidden bg-dark-900/95 px-4 pb-4 backdrop-blur-md md:hidden"
+            className="flex flex-col gap-1 overflow-hidden bg-dark-900/95 px-4 pb-4 backdrop-blur-md lg:hidden"
           >
             {NAV_LINKS.map((link) => (
               <li key={link.href}>

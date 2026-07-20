@@ -1,7 +1,10 @@
 import type {
+  AchievementEntry,
   EducationEntry,
+  ExperienceEntry,
   NavLink,
   Project,
+  SkillCategory,
   SocialLink,
 } from '@/types';
 
@@ -25,24 +28,43 @@ export const PERSONAL_INFO = {
   shortName: 'Tanmay',
   fullName: 'Margana Satya Krishna Sai Tanmay',
   username: 'mskstanmay',
-  tagline: 'Final Year CSE Student & Software Developer',
+  // Hero role line — leads with the work, states the student status plainly
+  // rather than hiding or leading with it. Rewritten during the Hero/About
+  // content pass; see that milestone's writeup for the reasoning.
+  tagline: 'Full-stack & systems engineer, final year @ VIT-AP',
+  // Hero body copy. Deliberately concrete (names the actual platform and
+  // its real scale) instead of the previous version's buzzword stack
+  // ("enterprise-grade", "AI-powered pipelines", "cloud-native",
+  // "research-driven engineering") which described a category, not a person.
   subTagline:
-    'VIT Amaravati CSE undergrad building enterprise-grade full-stack systems, AI-powered pipelines, and cloud-native applications. Passionate about scalable architecture, intelligent automation, and research-driven engineering.',
-  bio: 'VIT Amaravati CSE undergrad building enterprise-grade full-stack systems, AI-powered pipelines, and cloud-native applications. Passionate about scalable architecture, intelligent automation, and research-driven engineering.',
+    "I spend most of my time in backend and data, the parts of a product that have to keep working after the demo ends. Lately that's meant building the platform behind a live regulatory compliance tool used across six international regulators, and picking up distributed systems and applied ML along the way.",
+  // About section copy — deliberately distinct from subTagline (previously
+  // identical strings, flagged in the original audit as "the bio field is
+  // just the tagline restated"). This one answers "how do you think," not
+  // "what's your title" — grounded in specific, real projects rather than
+  // adjectives.
+  bio: "I like problems where the interesting part is underneath the UI, how data moves, where it breaks, what happens at the edges. Most of what I've built follows that: a compliance platform that has to process malformed PDFs without falling over, a messaging system built on consensus instead of trust, a flash-storage emulator I wrote in a weekend because I wanted to know how wear-leveling actually works. I also compete on LeetCode and read papers when a project needs it. A stretch of EEG signal work taught me more about explainability than any course did.",
   location: 'Faridabad, Haryana, India',
   domain: 'mskstanmay.co.in',
   email: 'mskstanmaywork@gmail.com',
   resumeUrl: 'https://drive.google.com/uc?export=download&id=1xN5givsjg4nglxmrMUJtnYgkWyeZyQcg',
-  profileImage: '/linkedinpfp.png',
+  profileImage: '/linkedinpfp.webp',
 };
 
+// Order matches the page's actual section order (see App.tsx) so the nav
+// reads as a table of contents, not an arbitrary list. "Work" replaces the
+// old "Projects" label to match Submissions' own heading ("Selected work")
+// — the section id stays `#projects` to avoid touching anything that
+// already links to it.
 export const NAV_LINKS: NavLink[] = [
   { label: 'Home', href: '#home' },
+  { label: 'Work', href: '#projects' },
+  { label: 'Experience', href: '#experience' },
   { label: 'About', href: '#about' },
   { label: 'Skills', href: '#skills' },
-  { label: 'Projects', href: '#projects' },
   { label: 'LeetCode', href: '#leetcode' },
   { label: 'GitHub', href: '#github' },
+  { label: 'Recognition', href: '#recognition' },
   { label: 'Contact', href: '#contact' },
 ];
 
@@ -58,11 +80,6 @@ export const SOCIAL_LINKS: SocialLink[] = [
     icon: 'linkedin',
   },
   {
-    name: 'Twitter',
-    url: 'https://twitter.com/mskstanmay',
-    icon: 'twitter',
-  },
-  {
     name: 'LeetCode',
     url: 'https://leetcode.com/mskstanmay',
     icon: 'leetcode',
@@ -73,32 +90,26 @@ export const SOCIAL_LINKS: SocialLink[] = [
     icon: 'email',
   },
 ];
+// Pre-university entries (FIITJEE Intermediate, Modern Delhi Public School —
+// 85% and 92.5% board-exam percentages) were removed during the Hero/About
+// content pass, per explicit instruction: 10th/12th-grade marks read as
+// resume-anxiety padding in a portfolio meant to be evaluated like any other
+// engineer's, and neither entry carries information a recruiter or engineer
+// would use. The generic coursework sentence on the remaining entry was cut
+// for the same reason — "Data Structures & Algorithms, AI, ML, Web
+// Development..." describes the syllabus every CS student shares, not this
+// one; the Submissions and Recognition sections already demonstrate applied
+// skill far more specifically than a course list could.
 export const EDUCATION: EducationEntry[] = [
   {
     institution: 'Vellore Institute of Technology (VIT), Amaravati, Andhra Pradesh, India',
     degree: 'B.Tech in Computer Science & Engineering',
     duration: 'September 2023 – Present',
-    score: 'GPA: 8.93 / 10.0',
-    description:
-      'Top 20% of CSE branch. Coursework: Data Structures & Algorithms, AI, ML, Web Development, DBMS, Operating Systems, Computer Networking.',
-  },
-  {
-    institution: 'FIITJEE Junior College, Visakhapatnam, AP, India',
-    degree: 'Intermediate (PCM)',
-    duration: 'June 2021 – May 2023',
-    score: '85% / 100%',
-    description: 'Coursework: Mathematics, Physics and Chemistry.',
-  },
-  {
-    institution: 'Modern Delhi Public School, Greater Faridabad, Haryana, India',
-    degree: 'High School',
-    duration: 'June 2020 – May 2021',
-    score: '92.5% / 100%',
-    description: 'Coursework: Mathematics, Science and Social Studies.',
+    score: 'GPA 8.93 / 10.0, top 20% of CSE branch',
   },
 ];
 
-export const SKILLS = [
+export const SKILLS: SkillCategory[] = [
   {
     category: 'Languages',
     skills: [
@@ -121,8 +132,6 @@ export const SKILLS = [
       { name: 'Vite' },
       { name: 'Tailwind CSS' },
       { name: 'Framer Motion' },
-      { name: 'HTML5' },
-      { name: 'CSS3' },
     ],
   },
   {
@@ -131,7 +140,6 @@ export const SKILLS = [
       { name: 'Node.js' },
       { name: 'Express.js' },
       { name: 'FastAPI' },
-      { name: 'REST APIs' },
       { name: 'JWT' },
     ],
   },
@@ -183,14 +191,6 @@ export const SKILLS = [
   },
 ];
 
-export interface ExperienceEntry {
-  role: string;
-  company: string;
-  period: string;
-  project?: string;
-  bullets: string[];
-}
-
 export const EXPERIENCE: ExperienceEntry[] = [
   {
     role: 'Software Development Intern',
@@ -232,8 +232,9 @@ export const PROJECTS: Project[] = [
       'Enterprise regulatory intelligence platform serving 1,100+ users and 30,000+ assets across six international regulators (SEC, ESMA, MAS, ASIC, SFC, FSC). Built React frontend, FastAPI backend with optimized PDF processing, and AI-assisted document intelligence pipelines via Gemini API.',
     techStack: ['React', 'FastAPI', 'Python', 'Gemini API', 'GitHub Actions', 'Apache'],
     githubUrl: `https://github.com/${GITHUB_USERNAME}/regulatory-atlas`,
-    liveUrl: '',
+    liveUrl: 'https://nifmfinmin.org/regulatory-updates/',
     featured: true,
+    status: 'shipped',
   },
   {
     id: 'filmfolio',
@@ -244,6 +245,7 @@ export const PROJECTS: Project[] = [
     githubUrl: `https://github.com/${GITHUB_USERNAME}/filmfolio`,
     liveUrl: '',
     featured: true,
+    status: 'shipped',
   },
   {
     id: 'velche',
@@ -251,9 +253,10 @@ export const PROJECTS: Project[] = [
     description:
       'Rule-based text classification and automation engine that sorts Gmail inboxes using configurable rules and local data persistence, saving users 20–30 minutes daily.',
     techStack: ['React', 'TypeScript', 'Chrome APIs'],
-    githubUrl: `https://github.com/${GITHUB_USERNAME}/velche`,
+    githubUrl: `https://github.com/${GITHUB_USERNAME}/velche-extension`,
     liveUrl: '',
     featured: true,
+    status: 'shipped',
   },
   {
     id: 'ai-fitness-pose-estimation',
@@ -264,6 +267,7 @@ export const PROJECTS: Project[] = [
     githubUrl: `https://github.com/${GITHUB_USERNAME}/ai-fitness-pose-estimation`,
     liveUrl: '',
     featured: true,
+    status: 'shipped',
   },
   {
     id: 'hedera-messaging',
@@ -271,9 +275,10 @@ export const PROJECTS: Project[] = [
     description:
       'Enterprise publish-subscribe messaging platform using Hedera Consensus Service (HCS) with aBFT consensus for fair event ordering. Local node environments provisioned and tested via Docker for concurrent data stream validation.',
     techStack: ['Hedera Hashgraph', 'Node.js', 'Docker', 'HCS'],
-    githubUrl: `https://github.com/${GITHUB_USERNAME}/hedera-messaging`,
+    githubUrl: `https://github.com/${GITHUB_USERNAME}/Distributed-Messaging---Consensus-Architecture`,
     liveUrl: '',
     featured: true,
+    status: 'shipped',
   },
   {
     id: 'eeg-biomarker',
@@ -284,6 +289,7 @@ export const PROJECTS: Project[] = [
     githubUrl: `https://github.com/${GITHUB_USERNAME}/eeg-biomarker`,
     liveUrl: '',
     featured: false,
+    status: 'shipped',
   },
   {
     id: 'electricity-forecasting',
@@ -294,6 +300,7 @@ export const PROJECTS: Project[] = [
     githubUrl: `https://github.com/${GITHUB_USERNAME}/electricity-forecasting`,
     liveUrl: '',
     featured: false,
+    status: 'shipped',
   },
   {
     id: 'virtual-eeprom',
@@ -304,19 +311,32 @@ export const PROJECTS: Project[] = [
     githubUrl: `https://github.com/${GITHUB_USERNAME}/Virtual-EEPROM---Flash-Memory-Emulation`,
     liveUrl: '',
     featured: false,
+    status: 'shipped',
   },
 ];
 
-export const ACHIEVEMENTS: string[] = [
-  'LeetCode: 375+ problems solved — Peak Contest Rating 1,578 (Top 27.31%)',
-  'GATE: Qualified in pre-final year — AIR ~19,000',
-  'Smart India Hackathon (SIH) — Top 10 Team',
-  'D3 Hackathon (IEEE VIT-AP) — 2nd Place',
-  'AWS Academy Graduate — Cloud Foundations & Cloud Architecting',
-  'Google Cloud Skill Badges — Advanced Cloud & Generative AI',
-  'Bloomberg Market Concepts (BMC)',
-  'Hedera Developer Certification (DLT Mastery)',
-  'MathWorks MATLAB Onramp',
+// Grouped by what each entry actually is, not by a generic binary split —
+// see the AchievementEntry type comment. Same facts as before; only the
+// classification changed. Rendered by Recognition (Milestone 6).
+//
+// The static LeetCode summary entry that used to live here ("375+ problems
+// solved...") was removed during the site-wide integration pass: the
+// LeetCode section a few scrolls down pulls the same figure live (378 and
+// rising) and breaks it down further. Keeping a hand-written snapshot next
+// to a live one meant the two could silently disagree — they already did
+// (375 vs 378) — so the live section is now the single source for that
+// signal instead of Recognition duplicating it. `competitive-programming`
+// stays in the AchievementEntry type for a future entry that isn't already
+// covered live elsewhere (e.g. a contest placement).
+export const ACHIEVEMENTS: AchievementEntry[] = [
+  { label: 'GATE: Qualified in pre-final year, AIR ~19,000', type: 'award' },
+  { label: 'Smart India Hackathon (SIH), Top 10 Team', type: 'award' },
+  { label: 'D3 Hackathon (IEEE VIT-AP), 2nd Place', type: 'award' },
+  { label: 'AWS Academy Graduate: Cloud Foundations & Cloud Architecting', type: 'certification' },
+  { label: 'Google Cloud Skill Badges: Advanced Cloud & Generative AI', type: 'certification' },
+  { label: 'Bloomberg Market Concepts (BMC)', type: 'certification' },
+  { label: 'Hedera Developer Certification (DLT Mastery)', type: 'certification' },
+  { label: 'MathWorks MATLAB Onramp', type: 'certification' },
 ];
 
 export const LEETCODE_GRAPHQL_ENDPOINT = 'https://leetcode.com/graphql';

@@ -32,7 +32,7 @@ export default function Hero() {
           Hi, I&apos;m
         </motion.p>
         <motion.h1 variants={item} className="text-4xl font-extrabold text-white sm:text-6xl">
-          {PERSONAL_INFO.fullName}
+          {PERSONAL_INFO.name}
         </motion.h1>
         <motion.h2 variants={item} className="mt-4 text-xl font-semibold text-slate-300 sm:text-2xl">
           {PERSONAL_INFO.tagline}
@@ -50,7 +50,7 @@ export default function Hero() {
             }}
             className="btn-primary"
           >
-            View Projects
+            View Work
           </a>
           <a
             href={PERSONAL_INFO.resumeUrl}

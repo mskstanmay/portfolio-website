@@ -32,7 +32,7 @@ export const PERSONAL_INFO = {
   location: 'Faridabad, Haryana, India',
   domain: 'mskstanmay.co.in',
   email: 'mskstanmaywork@gmail.com',
-  resumeUrl: 'https://drive.google.com/uc?export=download&id=1xN5givsjg4nglxmrMUJtnYgkWyeZyQcg',
+  resumeUrl: 'https://drive.google.com/uc?export=download&id=1MaRxfhY444s45WZraF6aGmEyAE_ivIXT',
   profileImage: '/linkedinpfp.png',
 };
 

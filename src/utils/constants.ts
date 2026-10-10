@@ -50,8 +50,7 @@ export const PERSONAL_INFO = {
   location: 'Faridabad, Haryana, India',
   domain: 'mskstanmay.co.in',
   email: 'mskstanmaywork@gmail.com',
-  // TODO: Add the verified resume URL after manual confirmation.
-  resumeUrl: '',
+  resumeUrl: 'https://drive.google.com/uc?export=download&id=1MaRxfhY444s45WZraF6aGmEyAE_ivIXT',
   profileImage: '/linkedinpfp.webp',
 };
 

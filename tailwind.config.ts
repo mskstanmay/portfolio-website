@@ -31,9 +31,37 @@ const config: Config = {
           600: '#1b2334',
           500: '#232d42',
         },
+        // Semantic status colors for the submission/verdict model (The Judge).
+        // Values are intentionally reused from the emerald/amber/slate/rose
+        // shades already appearing ad hoc in LeetCode.tsx and GitHub.tsx, so
+        // migrating those files onto these tokens later is a rename, not a
+        // visual change.
+        verdict: {
+          accepted: '#34d399', // shipped / live work
+          progress: '#fbbf24', // actively in development
+          archived: '#94a3b8', // deprioritized, not a failure
+          wrongAnswer: '#fb7185', // honest miss — attempted, didn't land
+        },
       },
       fontFamily: {
         sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        // Reserved for literal data: verdict labels, dates, stack tags,
+        // stat values — never for prose. See src/index.css `.stat-number`.
+        mono: ['JetBrains Mono', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'],
+      },
+      borderRadius: {
+        // Two-value radius system: `control` for buttons/inputs/tags,
+        // `panel` for cards/surfaces. Default Tailwind scale stays available
+        // for anything that doesn't fit those two roles.
+        control: '8px',
+        panel: '14px',
+      },
+      boxShadow: {
+        // Replaces drop-shadows (invisible on near-black backgrounds) with a
+        // border + soft accent glow, used on hover/focus for interactive
+        // surfaces.
+        'glow-sm': '0 0 0 1px rgba(59, 108, 246, 0.4), 0 4px 16px -8px rgba(59, 108, 246, 0.5)',
+        'glow-md': '0 0 0 1px rgba(59, 108, 246, 0.5), 0 8px 24px -12px rgba(59, 108, 246, 0.6)',
       },
       animation: {
         'fade-in': 'fadeIn 0.6s ease-in-out forwards',

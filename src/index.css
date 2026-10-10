@@ -46,4 +46,63 @@ body {
   .badge {
     @apply inline-flex items-center rounded-full border border-dark-500 bg-dark-700 px-3 py-1 text-xs font-medium text-slate-300;
   }
+
+  /* --- Foundation additions below: next-generation primitives for the ---
+     --- submission/verdict model. Nothing above this line is modified,  ---
+     --- so existing sections (Hero, Skills, Projects, etc.) are unaffected. */
+
+  /* Surface primitive for new components. `.card` is left as-is for
+     sections that haven't been rebuilt yet; `.panel` is the successor
+     (14px radius per the two-value radius system) new components should use. */
+  .panel {
+    @apply rounded-panel border border-dark-500 bg-dark-800/80;
+  }
+
+  /* Mono, uppercase, tracked label — for eyebrows and section labels once
+     SectionHeading is rebuilt. Not yet applied anywhere. */
+  .eyebrow {
+    @apply font-mono text-xs font-semibold uppercase tracking-widest text-primary-400;
+  }
+
+  /* Tabular-numeral treatment for any literal numeric data (stats, counts,
+     dates) so columns of digits align instead of jittering with proportional
+     figure widths. */
+  .stat-number {
+    @apply font-mono tabular-nums;
+  }
+
+  /* Verdict badge — the core visual vocabulary of the submission model.
+     Base class carries shape/type; a status modifier carries color. */
+  .verdict-badge {
+    @apply inline-flex items-center gap-1.5 rounded-control border px-2.5 py-1 font-mono text-[11px] font-semibold uppercase tracking-wide;
+  }
+
+  .verdict-badge-accepted {
+    @apply border-verdict-accepted/40 bg-verdict-accepted/10 text-verdict-accepted;
+  }
+
+  .verdict-badge-progress {
+    @apply border-verdict-progress/40 bg-verdict-progress/10 text-verdict-progress;
+  }
+
+  .verdict-badge-archived {
+    @apply border-verdict-archived/40 bg-verdict-archived/10 text-verdict-archived;
+  }
+
+  .verdict-badge-wrong-answer {
+    @apply border-verdict-wrongAnswer/40 bg-verdict-wrongAnswer/10 text-verdict-wrongAnswer;
+  }
+
+  /* Stack/skill tag for SubmissionCard — mono type per the typography rule
+     (data/labels use mono, prose uses Inter), `control` radius rather than
+     `.badge`'s full pill, so evidence of skill reads as data, not decoration. */
+  .tag {
+    @apply inline-flex items-center rounded-control border border-dark-500 bg-dark-700 px-2.5 py-1 font-mono text-xs text-slate-300;
+  }
+
+  /* Ghost trigger for the EvidencePanel disclosure — deliberately quiet so it
+     doesn't compete with the verdict badge or title for attention. */
+  .disclosure-trigger {
+    @apply inline-flex items-center gap-1.5 text-sm font-medium text-slate-400 transition-colors hover:text-primary-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 focus-visible:ring-offset-dark-900;
+  }
 }

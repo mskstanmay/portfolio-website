@@ -185,7 +185,7 @@ export default function LeetCode() {
       <SectionHeading
         eyebrow="Competitive Programming"
         title="LeetCode Progress"
-        description={`Profile stats for @${LEETCODE_USERNAME}. API data is shown when available; otherwise the section identifies its manually synced fallback. 375+ problems solved, with a peak contest rating of ${LEETCODE_PEAK_CONTEST_RATING}.`}
+        description={`Live problem-solving stats for @${LEETCODE_USERNAME}, with a peak contest rating of ${LEETCODE_PEAK_CONTEST_RATING}. A manually synced fallback is identified whenever live data is unavailable.`}
       />
       <ErrorBoundary fallbackMessage="Couldn't load LeetCode stats right now.">
         <LeetCodeContent reduceMotion={reduceMotion} />

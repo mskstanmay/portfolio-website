@@ -8,15 +8,15 @@ const FALLBACK_API = 'https://alfa-leetcode-api.onrender.com';
 const REQUEST_TIMEOUT_MS = 8000;
 
 const STATIC_FALLBACK: Omit<LeetCodeStats, 'isStatic'> = {
-  totalSolved: 375,
-  easySolved: 180,
-  mediumSolved: 160,
-  hardSolved: 35,
+  totalSolved: 389,
+  easySolved: 151,
+  mediumSolved: 194,
+  hardSolved: 44,
   totalEasy: 844,
   totalMedium: 1768,
   totalHard: 740,
-  ranking: 238492,
-  acceptanceRate: 54.2,
+  ranking: 341677,
+  acceptanceRate: 88.54,
   topics: [],
 };
 

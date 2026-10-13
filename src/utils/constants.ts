@@ -353,12 +353,11 @@ export const PROJECTS: Project[] = [
 // see the AchievementEntry type comment. Same facts as before; only the
 // classification changed. Rendered by Recognition (Milestone 6).
 //
-// The static LeetCode summary entry that used to live here ("375+ problems
-// solved...") was removed during the site-wide integration pass: the
-// LeetCode section a few scrolls down pulls the same figure live (378 and
-// rising) and breaks it down further. Keeping a hand-written snapshot next
-// to a live one meant the two could silently disagree — they already did
-// (375 vs 378) — so the live section is now the single source for that
+// The static LeetCode summary entry that used to live here was removed during
+// the site-wide integration pass: the LeetCode section a few scrolls down
+// pulls the figure live and breaks it down further. Keeping a hand-written
+// snapshot alongside live data caused them to disagree, so the live section
+// is now the single source for that
 // signal instead of Recognition duplicating it. `competitive-programming`
 // stays in the AchievementEntry type for a future entry that isn't already
 // covered live elsewhere (e.g. a contest placement).
